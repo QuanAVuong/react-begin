@@ -1,6 +1,15 @@
 var React = require("react");
 var ReactDOM = require("react-dom");
 
+// REACT ROUTER	
+var ReactRouter  = require("react-router");
+var Router = ReactRouter.Router;
+var Route = ReactRouter.Route;
+var Navigation = ReactRouter.Navigation;
+
+// separate npm module: import code for HTML5's push state
+var createBrowserHistory = require("history/lib/createBrowserHistory");
+
 /*
 	APP
 */
@@ -10,7 +19,7 @@ var App = React.createClass({
 		return (
 			<div className="catch-of-the-day">
 				<div className="menu">
-					<h3>menu</h3>
+					<Header tagline="Fresh Seafood Market" />
 				</div>
 				<Order />
 				<Inventory />
@@ -24,11 +33,19 @@ var App = React.createClass({
 */
 
 var Header = React.createClass({
-	render: function() {
-		return (
-			<p>Header</p>
-		)
-	}
+  render : function() {
+    return (
+      <header className="top">
+        <h1>Catch
+          <span className="ofThe">
+            <span className="of">of</span>
+            <span className="the">the</span>
+          </span>
+          Day</h1>
+        <h3 className="tagline"><span>{this.props.tagline}</span></h3> 
+      </header>
+    )
+  }
 })
 
 /*
@@ -73,8 +90,30 @@ var StorePicker = React.createClass({
 	}
 })
 
+
+/*NOT FOUND*/
+var NotFound = React.createClass({
+	render: function() {
+		return <h1>404 Page Not Found!</h1>
+	}
+})
+
+ // ROUTES
+ var routes = (
+ 	<Router history={createBrowserHistory()}> 
+ 		{/*path "/": home page; component: StorePicker, not App */}
+ 		<Route path="/" component={StorePicker} />
+ 		{/* storeId: placeholder eg. clumsy-grumpy-leaves*/}
+ 		<Route path="/store/:storeId" component={App} />
+ 		<Route path="*" component={NotFound} />
+ 	</Router>
+ ) // will need to pass to ReactDOM to render routers instead of App
+
+
+
+
 // Mounting <StorePicker /> to the page
 ReactDOM.render(
-	<App />,
+	routes,
 	document.querySelector("#main")
 );
