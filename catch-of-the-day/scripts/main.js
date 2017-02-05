@@ -73,6 +73,7 @@ var AddFishForm = React.createClass({
 		// 3. Add fish to App State
 		// App.addFish(fish) would makes sense, but addFish isn't in AddFishForm
 		this.props.addFish(fish); // passed down from <Inventory addFish={...this.props}/>
+		this.refs.fishForm.reset(); // reset form's input fields
 		
 	},
 
