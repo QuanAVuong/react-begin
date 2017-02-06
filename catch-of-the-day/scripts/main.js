@@ -45,15 +45,47 @@ var App = React.createClass({
 		})
 	},
 
+	renderFish: function(key) { // key = fish1, fish2 etc
+		return <Fish key={key} index={key} details={this.state.fishes[key]} />
+	},
+
 	render: function() {
 		return (
 			<div className="catch-of-the-day">
 				<div className="menu">
 					<Header tagline="Fresh Seafood Market" />
+					{/*Displaying Sample Fishes*/}
+					<ul className="list-of-fishes">
+						{/*Loop through fishes; JSX has no builtin templating logic*/}
+						{ // usually using arrayName.map(),
+						  // Object.keys(): array of all keys eg. fish1, fish2...
+						  Object.keys(this.state.fishes).map( this.renderFish )
+						}
+					</ul>
 				</div>
 				<Order />
 				<Inventory addFish={this.addFish} loadSamples={this.loadSamples} />
 			</div>
+		)
+	}
+})
+
+
+/*
+	Add Fish Form <AddFishForm />
+ */
+var Fish = React.createClass({
+	render: function() {
+		var details = this.props.details;
+		return (
+			<li className="menu-fish">
+				<img src={details.image} alt={details.name} />
+				<h3 className="fish-name">
+					{details.name}
+					<span className="price">{helpers.formatPrice(details.price)}</span>
+				</h3>
+				<p>{details.desc}</p>
+			</li>
 		)
 	}
 })
