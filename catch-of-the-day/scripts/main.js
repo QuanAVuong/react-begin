@@ -39,15 +39,30 @@ var App = React.createClass({
 		this.setState({ fishes: this.state.fishes }); 
 	},
 
+	addToOrder: function(key) {
+		// Update Order state object
+		// key = fish1 fish2 etc; if [key] true => add 1; else fals => set to 1
+		this.state.order[key] = this.state.order[key] + 1 || 1; 
+
+		// Update HTML with setState:
+		this.setState({ order: this.state.order })
+	},
+
 	loadSamples: function() {
 		this.setState({
 			fishes: require("./sample-fishes")
 		})
 	},
 
+	// <Fish />
 	renderFish: function(key) { // key = fish1, fish2 etc
-		return <Fish key={key} index={key} details={this.state.fishes[key]} />
+		return <Fish key={key} index={key} 
+					details={this.state.fishes[key]} 
+					addToOrder={this.addToOrder}
+				/>
 	},
+
+	
 
 	render: function() {
 		return (
@@ -75,8 +90,22 @@ var App = React.createClass({
 	Add Fish Form <AddFishForm />
  */
 var Fish = React.createClass({
+	onButtonClick: function() { 
+		// .index (fish obj) need to be added to <App />'s {order state}
+		// => <App /> : addToOrder()
+		console.log('Going to add the fish:', this.props.index);
+		var key = this.props.index; // fish1, fish2...
+		this.props.addToOrder(key); // updating Order state
+
+	},
+
 	render: function() {
 		var details = this.props.details;
+		
+		// Create Add button to add fish to order
+		var isAvailable = ( details.status === "available" ? true : false )
+		var buttonText = ( isAvailable ? "Add To Order" : "Sold Out !" )
+
 		return (
 			<li className="menu-fish">
 				<img src={details.image} alt={details.name} />
@@ -85,6 +114,8 @@ var Fish = React.createClass({
 					<span className="price">{helpers.formatPrice(details.price)}</span>
 				</h3>
 				<p>{details.desc}</p>
+				{/*isAvailable: true => disabled: false and vice versa*/} 
+				<button disabled={ !isAvailable } onClick={this.onButtonClick} >{ buttonText }</button>
 			</li>
 		)
 	}
